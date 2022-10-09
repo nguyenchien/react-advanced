@@ -12,7 +12,11 @@ const UseEffectBasics = () => {
     if (value >= 1 ) {
       document.title = `New title ${value}`;
     }
-  });
+  }, [value]);
+  
+  useEffect(()=> {
+    console.log('Hello world');
+  }, []);
   
   console.log('component render');
   return <>
