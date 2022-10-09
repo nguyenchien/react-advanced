@@ -5,13 +5,15 @@ import React, { useState, useEffect } from 'react';
 // *** Note in mind: Hook not in condition
 const UseEffectBasics = () => {
   
+  const [value, setValue] = useState(0);
+  
   useEffect(()=> {
+    console.log('useEffect render');
     if (value >= 1 ) {
-      document.title = `useEffect render ${value}`;
+      document.title = `New title ${value}`;
     }
   });
   
-  const [value, setValue] = useState(0);
   console.log('component render');
   return <>
     <h2>{value}</h2>
