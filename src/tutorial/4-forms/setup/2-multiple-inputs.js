@@ -1,42 +1,57 @@
-import React, { useState } from 'react';
+import React, { useState, useRef, useEffect } from 'react';
 // JS
 // const input = document.getElementById('myText');
 // const inputValue = input.value
 // React
 // value, onChange
-// dynamic object keys
+//*** dynamic object keys => IMPORTANT ([name]: value)
 
 const ControlledInputs = () => {
-  const [firstName, setFirstName] = useState('');
-  const [email, setEmail] = useState('');
+  // const [firstName, setFirstName] = useState('');
+  // const [email, setEmail] = useState('');
+  
   const [people, setPeople] = useState([]);
+  const [person, setPerson] = useState({firstName:'', email: ''});  
+  const refContainer = useRef(null);
+  
+  useEffect(() => {
+    refContainer.current.focus();
+  });
 
   const handleSubmit = (e) => {
     e.preventDefault();
-    if (firstName && email) {
-      const person = { id: new Date().getTime().toString(), firstName, email };
-      console.log(person);
-      setPeople((people) => {
-        return [...people, person];
-      });
-      setFirstName('');
-      setEmail('');
+    let newPerSon = {};
+    if (person.firstName && person.email) {
+      newPerSon = {
+        id: new Date().getTime().toString(),
+        ...person
+      }
+      setPeople([...people, newPerSon]);
+      setPerson({firstName:'', email: ''});
     } else {
-      console.log('empty values');
+      console.log('please input values');
     }
   };
+  
+  const handleChange = (e) => {
+    const name = e.target.name;
+    const value = e.target.value;
+    setPerson ({...person, [name]: value});
+  };
+  
   return (
     <>
       <article>
-        <form className='form' onSubmit={handleSubmit}>
+        <form className='form'>
           <div className='form-control'>
             <label htmlFor='firstName'>Name : </label>
             <input
               type='text'
               id='firstName'
               name='firstName'
-              value={firstName}
-              onChange={(e) => setFirstName(e.target.value)}
+              value={person.firstName}
+              onChange={handleChange}
+              ref={refContainer}
             />
           </div>
           <div className='form-control'>
@@ -45,11 +60,11 @@ const ControlledInputs = () => {
               type='email'
               id='email'
               name='email'
-              value={email}
-              onChange={(e) => setEmail(e.target.value)}
+              value={person.email}
+              onChange={handleChange}
             />
           </div>
-          <button type='submit'>add person</button>
+          <button type='submit' onClick={handleSubmit}>add person</button>
         </form>
         {people.map((person, index) => {
           const { id, firstName, email } = person;
